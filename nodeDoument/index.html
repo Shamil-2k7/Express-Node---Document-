@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js & Express Cheat Sheet</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="container">
+        <aside class="sidebar">
+            <h2>Menu</h2>
+            <nav>
+                <a href="#basic">Basic Setup</a>
+                <a href="#ejs">EJS View Engine</a>
+                <div class="sub-nav">
+                    <a href="#mongoose">↳ Loop</a>
+
+                </div>
+                <a href="#mongoose" class="parent-link">Mongoose DB</a>
+
+                <div class="sub-nav">
+                    <a href="#mongoose">↳ Connection</a>
+                    <a href="#schema">↳ Schema</a>
+                </div>
+
+                <a href="#multer">Multer</a>
+
+                <a href="#Local-Storage">Local Storage</a>
+            </nav>
+        </aside>
+
+        <div class="main-wrapper">
+            <main class="main-content">
+
+                <section id="basic" class="content-card">
+                    <h1>Base Code: Node.js + Express</h1>
+                    <div class="subheading">
+                        1. Create folders: <span class="foldertext">controllers</span>, <span
+                            class="foldertext">models</span>, <span class="foldertext">views</span>📂<br>
+                        2. Create file: <span class="FileNameText">app.js</span> 📃<br>
+                        3. Install Express:
+                    </div>
+                    <div class="terminalcodefiled">npm install express</div>
+
+                    <div class="copy-container">
+                        <pre class="copy-text">const express = require('express');
+const app = express();</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+
+                    <div class="subheading">Add Basic Route (app.js)</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">app.get('/', getHome);</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+
+                    <div class="subheading">Update Scripts (package.json)</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">"scripts": {
+  "start": "node app.js",
+  "dev": "nodemon app.js"
+}</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                    <div class="subheading">This middleware parses incoming requests with URL-encoded payloads, which is
+                        the default format for HTML form submissions</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">app.use(express.json())
+app.use(express.urlencoded({ extended: true }));</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                </section>
+
+                <hr class="section-divider">
+
+
+                <section class="content-card">
+                    <h1>Environment Setup (.env)</h1>
+                    <div class="subheading">1. Create <span class="FileNameText">.env</span> file 📃</div>
+                    <div class="terminalcodefiled">npm install dotenv</div>
+
+                    <div class="subheading">Configure app.js</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">require('dotenv').config();
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+    console.log(`Server running on http://localhost:${PORT}`);
+});</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                </section>
+                <hr class="section-divider">
+
+                <section id="ejs" class="content-card">
+                    <h1>EJS Setup</h1>
+                    <div class="terminalcodefiled">npm install ejs</div>
+                    <div class="subheading">Add to app.js</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">app.set('view engine', 'ejs');
+app.set('views', './views');</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                    <div class="subheading">Add to <spanclass="FileNameText">controller.js</span></div>
+                    <div class="subheading"> If you pass an object</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">res.render("index", { products: productdata })</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                    <div class="subheading">Add to <spanclass="FileNameText">index.ejs</span></div>
+                    <div class="copy-container">
+                        <pre class="copy-text"><% for (let i = 0; i < products.length; i++) { %>
+    <%= products[i].Name %>
+<% } %></pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                </section>
+                <hr class="section-divider">
+
+                <section id="mongoose" class="content-card">
+                    <h1>Mongoose Connection</h1>
+                    <div class="terminalcodefiled">npm install mongoose</div>
+                    <div class="copy-container">
+                        <pre class="copy-text">const mongoose = require('mongoose');
+const dbURI = process.env.DBURL;
+
+mongoose.connect(dbURI)
+  .then(() => console.log('Connected to MongoDB'))
+  .catch((err) => console.error('Connection error:', err));</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                </section>
+                <hr class="section-divider">
+
+                <section id="schema" class="content-card">
+                    <h1>Mongoose Schema</h1>
+                    <div class="subheading">Create <span class="FileNameText">models/User.js</span></div>
+                    <div class="copy-container">
+                        <pre class="copy-text">const mongoose = require('mongoose');
+
+const userSchema = new mongoose.Schema({
+    name: { type: String, required: true },
+    power_type: { type: String, required: true }
+});
+
+module.exports = mongoose.model('User', userSchema);</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                </section>
+                <hr class="section-divider">
+
+            </main>
+
+            <!-- Multer -->
+
+
+
+            <main class="main-content" id="multer">
+                <section class="content-card">
+                    <h1>Multer</h1>
+                    <p class="description">Uploading files to a local public folder in Node.js using Multer involves a
+                        few steps. This article helps you set it up.</p>
+
+
+                    <div class="terminalcodefiled">npm install multer</div>
+                    <div class="mongoose-sub">
+                        <h2 class="sub-title">1. Connection Logic</h2>
+                        <div class="subheading">Include express and multer in your server file.<span
+                                class="FileNameText">app.js</span></div>
+                        <div class="copy-container">
+                            <pre class="copy-text">
+const multer = require('multer');
+
+
+app.use(express.static('public'));</pre>
+                            <button class="copy-btn">Copy Text</button>
+                        </div>
+                    </div>
+                    <div class="subheading">Create an folder for public.</div>
+                    <div class="subheading">Create an folder inside public for Images stor.</div>
+
+                    <div class="copy-container">
+                        <pre class="copy-text">const storage = multer.diskStorage({
+     destination: function (req, file, cb) {
+          cb(null, 'public/uploads')
+    },
+   filename: function (req, file, cb) {
+         cb(null, file.fieldname + '-' + Date.now())
+   }
+});
+
+const upload = multer({ storage: storage });</pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                    <div class="subheading">'public/uploads' - change this and add your file name.</div>
+                    <hr class="section-divider">
+
+                    <div class="mongoose-sub">
+                        <h2 class="sub-title"> Create an Upload Route</h2>
+                        <div class="subheading">Convert the schema into a usable model</div>
+                        <div class="copy-container">
+                            <pre class="copy-text">app.post('/upload', upload.single('file'), uploas);</pre>
+                            <button class="copy-btn">Copy Text</button>
+                        </div>
+
+                    </div>
+                    <div class="subheading">uploas- Enter your controller fuction name you need</div>
+
+
+
+
+                    <div class="mongoose-sub">
+                        <h2 class="sub-title">Create a Form to Submit Files</h2>
+                        <div class="subheading">Create an HTML form with action="/upload", method="post", and
+                            enctype="multipart/form-data".</div>
+                        <div class="copy-container">
+                            <pre class="copy-text">
+
+&lt;form action="/upload" method="post" enctype="multipart/form-data"&gt;
+    &lt;input type="file" name="file" /&gt;
+    &lt;input type="submit" value="Upload File" /&gt;
+&lt;/form&gt;
+
+</pre>
+                            <button class="copy-btn">Copy Text</button>
+                        </div>
+                    </div>
+                </section>
+
+                <hr class="section-divider">
+
+                <section class="content-card" id="Local-Storage">
+                    <h1>Local-Storage</h1>
+                    <p class="description">node-localstorage is a drop-in substitute for the browser native localStorage
+                        API that runs on node.js.</p>
+
+                    <h2 class="sub-title">Install local storage</h2>
+
+                    <div class="terminalcodefiled">npm install node-localstorage</div>
+
+
+
+
+                    <div class="mongoose-sub">
+                        <!-- <h2 class="sub-title">Controller file sutup </h2> -->
+                        <div class="subheading">Import node-localstorage<span class="FileNameText">controller.js</span>
+                        </div>
+                        <div class="copy-container">
+                            <pre class="copy-text">
+import {LocalStorage} from "node-localstorage"
+
+var localStorage = new LocalStorage('./scratch'); 
+</pre>
+                            <button class="copy-btn">Copy Text</button>
+                        </div>
+                    </div>
+
+                </section>
+                <div class="mongoose-sub">
+                    <h2 class="sub-title">Stor data in to localstorage</h2>
+                    <div class="subheading">Add this for insert data<span class="FileNameText">controller.js</span>
+                    </div>
+                    <div class="copy-container">
+                        <pre class="copy-text">localStorage.setItem('Name', value) </pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                    <div class="subheading">get data into a varable<span class="FileNameText">controller.js</span></div>
+                    <div class="copy-container">
+                        <pre class="copy-text">localStorage.getItem('Name') </pre>
+                        <button class="copy-btn">Copy Text</button>
+                    </div>
+                </div>
+
+            </main>
+
+
+
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
